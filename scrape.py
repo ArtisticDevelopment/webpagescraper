@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import pprint
 
 #gathers website html in text form as soup 
 res = requests.get('https://news.ycombinator.com/')
@@ -12,15 +13,14 @@ subtext = soup.select('.subtext')
 def create_custom_hn(links, subtext):
   hacker_news_list = []
   for index, item in enumerate(links):
-    title = links[index].getText()
-    href = links[index].get('href', None)
+    title = item.getText()
+    href = item.get('href', None)
     votesList = subtext[index].select('.score')
     if votesList:
       points = int(votesList[0].getText().replace(' points', ''))
       if points > 100:
-        print(points)
-        hacker_news_list.append({'Title: ': title, 'Link: ': href})
+        hacker_news_list.append({'Title: ': title, 'Link: ': href , 'votes: ': points})
   
   return hacker_news_list
 
-(create_custom_hn(links, subtext))
+pprint.pprint(create_custom_hn(links, subtext))
